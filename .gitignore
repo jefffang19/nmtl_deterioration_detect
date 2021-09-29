@@ -1,0 +1,15 @@
+*.docx
+*.zip
+weights/
+yolo/
+train/
+test/
+*.json
+train_aug/
+*.csv
+.ipynb_checkpoints/
+mask_label/
+mask_patches/
+tile_yolo_label/
+yolo_label/
+predictions/

@@ -14,13 +14,6 @@ from tqdm import tqdm
 mask_path = 'predictions/'
 images_name = 'train_list.txt'
 
-label_dict = [
-    'Moth_eaten',
-    'Mold',
-    'Biological_exclusion',
-    'Brown_spots',
-    'Water_stains',
-]
 
 if __name__ == '__main__':
 
@@ -31,7 +24,7 @@ if __name__ == '__main__':
 
     # write csv file
     f = open('predictions.csv', 'w')
-    f.write(',image_name,label_id,x,y,w,h,confidence\n')
+    f.write(',image_filename,label_id,x,y,w,h,confidence\n')
     f.close()
 
     # iterate through all the image
@@ -78,6 +71,6 @@ if __name__ == '__main__':
 
                 # calculate
                 f.write('{},{},{},{},{},{},{},{}\n'.format(
-                    idx, im_name[:-4], label_dict[_cls], (minx+maxx)/2, (miny+maxy)/2, maxx-minx, maxy-miny, confidence))
+                    idx, im_name[:-4], _cls+1, minx, miny, maxx-minx, maxy-miny, confidence))
 
         f.close()
