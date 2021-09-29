@@ -8,7 +8,7 @@ import os
 import glob
 
 # define images path
-images_path = '../train'
+images_path = '../test'
 
 if __name__ == '__main__':
     # check if images path exist

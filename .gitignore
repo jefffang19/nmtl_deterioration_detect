@@ -13,3 +13,5 @@ mask_patches/
 tile_yolo_label/
 yolo_label/
 predictions/
+predictions_test/
+predictions_train/

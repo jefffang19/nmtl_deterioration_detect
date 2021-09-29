@@ -11,8 +11,8 @@ import numpy as np
 from tqdm import tqdm
 
 # define images path
-mask_path = 'predictions/'
-images_name = 'train_list.txt'
+mask_path = 'predictions_test/'
+images_name = 'test_list.txt'
 
 
 if __name__ == '__main__':
