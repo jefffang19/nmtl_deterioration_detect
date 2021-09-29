@@ -1,0 +1,40 @@
+import numpy as np
+from tqdm import tqdm
+import os
+from cv2 import cv2
+
+tiling_img_path = 'img_patches'
+image_path = '../test'
+
+whole_images = os.listdir(image_path)
+
+for whole in tqdm(whole_images):
+    # image as bgr
+    img = cv2.imread(os.path.join(
+        image_path, whole.split('.')[0]+'.jpg'))
+
+    '''
+    tiling strategy:
+    patch size = 416*416
+    shift = 208
+    will be divided into = 18*24 = 432 patches (per img)
+    '''
+    patch_size = 416
+    shift_size = 208
+    tiling_shape = [17, 23]
+
+    # save mask and image into patches
+    for y in range(tiling_shape[0]):
+        for x in range(tiling_shape[1]):
+            if x == tiling_shape[1]-1 and y == tiling_shape[0]-1:
+                cv2.imwrite('{}/{}[{}][{}].png'.format(tiling_img_path,
+                                                       whole.split('.')[0], y, x), img[-patch_size:, -patch_size:, :])
+            elif x == tiling_shape[1]-1:
+                cv2.imwrite('{}/{}[{}][{}].png'.format(tiling_img_path, whole.split('.')[
+                            0], y, x), img[shift_size*y: shift_size*y+patch_size, -patch_size:, :])
+            elif y == tiling_shape[0]-1:
+                cv2.imwrite('{}/{}[{}][{}].png'.format(tiling_img_path, whole.split('.')[
+                            0], y, x), img[-patch_size:, shift_size*x: patch_size+shift_size*x, :])
+            else:
+                cv2.imwrite('{}/{}[{}][{}].png'.format(tiling_img_path, whole.split('.')[
+                    0], y, x), img[shift_size*y: shift_size*y+patch_size, shift_size*x: patch_size+shift_size*x, :])
