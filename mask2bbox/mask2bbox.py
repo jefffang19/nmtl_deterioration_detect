@@ -8,10 +8,19 @@ import os
 import glob
 from skimage.measure import label, regionprops
 import numpy as np
+from tqdm import tqdm
 
 # define images path
 mask_path = 'predictions/'
 images_name = 'train_list.txt'
+
+label_dict = [
+    'Moth_eaten',
+    'Mold',
+    'Biological_exclusion',
+    'Brown_spots',
+    'Water_stains',
+]
 
 if __name__ == '__main__':
 
@@ -20,59 +29,55 @@ if __name__ == '__main__':
     im_names = f.readlines()
     im_names = [i[:-1] for i in im_names]
 
-    # load image with cv2
-    image = cv2.imread(os.path.join('../train', im_names[0]))
-    print(image.shape)
-    # change to rgb for matplotlib
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    # write csv file
+    f = open('predictions.csv', 'w')
+    f.write(',image_name,label_id,x,y,w,h,confidence\n')
+    f.close()
 
-    # get mask corresponding to this image
-    masks = glob.glob(os.path.join(
-        mask_path, '{}*.png'.format(im_names[0][:-4])))
+    # iterate through all the image
+    for idx, im_name in tqdm(enumerate(im_names)):
+        # get mask corresponding to this image
+        masks = glob.glob(os.path.join(
+            mask_path, '{}*.png'.format(im_name[:-4])))
 
-    # sort masks classes from 1 to 5
-    masks = sorted(masks)
+        # sort masks classes from 1 to 5
+        masks = sorted(masks)
 
-    # now parse 5 classes one by one
-    for _cls in range(5):
-        # load mask
-        msk = cv2.imread(masks[_cls], 0)
+        # now parse 5 classes one by one
+        f = open('predictions.csv', 'a')
+        for _cls in range(5):
+            # load mask
+            msk = cv2.imread(masks[_cls], 0)
 
-        # thresholding
-        thresh_msk = np.where(msk > 0, 255, 0).astype(np.uint8)
-        '''
-            # the fourth class is usually bigger, so we often need to concat masks from many patches
-            # it might be a good idea to do dilate and erode  to combine some disconnected parts
+            # thresholding
+            thresh_msk = np.where(msk > 0, 255, 0).astype(np.uint8)
             '''
-        if _cls == 4:
-            kernel = np.ones((3, 3), np.uint8)
-            dilation = cv2.dilate(thresh_msk, kernel, iterations=1)
-            thresh_msk = cv2.erode(dilation, kernel, iterations=1)
+                # the fourth class is usually bigger, so we often need to concat masks from many patches
+                # it might be a good idea to do dilate and erode  to combine some disconnected parts
+                '''
+            if _cls == 4:
+                kernel = np.ones((3, 3), np.uint8)
+                dilation = cv2.dilate(thresh_msk, kernel, iterations=1)
+                thresh_msk = cv2.erode(dilation, kernel, iterations=1)
 
-        # now we get connected component
-        label_img = label(thresh_msk)
+            # now we get connected component
+            label_img = label(thresh_msk)
 
-        # we get regions
-        regions = regionprops(label_img)
+            # we get regions
+            regions = regionprops(label_img)
 
-        # draw bonding box
-        fig, ax = plt.subplots()
-        ax.imshow(image)
+            # get bbox
+            for props in regions:
+                # get coord for bbox
+                miny, minx, maxy, maxx = props.bbox
 
-        for props in regions:
+                # calculate cofidence
+                confidence = np.sum(
+                    msk[miny:maxy, minx:maxx]) / np.sum(thresh_msk[miny:maxy, minx:maxx])
+                confidence = round(confidence, 3)
 
-            minr, minc, maxr, maxc = props.bbox
-            bx = (minc, maxc, maxc, minc, minc)
-            by = (minr, minr, maxr, maxr, minr)
-            ax.plot(bx, by, '-b', linewidth=2.5)
+                # calculate
+                f.write('{},{},{},{},{},{},{},{}\n'.format(
+                    idx, im_name[:-4], label_dict[_cls], (minx+maxx)/2, (miny+maxy)/2, maxx-minx, maxy-miny, confidence))
 
-        plt.show()
-
-    # define label index
-    # label_dict = {
-    #     'Moth_eaten': 0,
-    #     'Mold': 1,
-    #     'Biological_exclusion': 2,
-    #     'Brown_spots': 3,
-    #     'Water_stains': 4,
-    # }
+        f.close()
