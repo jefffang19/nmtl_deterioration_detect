@@ -11,9 +11,10 @@ import numpy as np
 from tqdm import tqdm
 
 # define images path
-mask_path = 'predictions_test/'
+mask_path = 'predictions_test_yolov5/'
 images_name = 'test_list.txt'
 
+confidence_threshold = 0.5
 
 if __name__ == '__main__':
 
@@ -69,8 +70,9 @@ if __name__ == '__main__':
                     msk[miny:maxy, minx:maxx]) / np.sum(thresh_msk[miny:maxy, minx:maxx])
                 confidence = round(confidence, 3)
 
-                # calculate
-                f.write('{},{},{},{},{},{},{},{}\n'.format(
-                    idx, im_name[:-4], _cls+1, minx, miny, maxx-minx, maxy-miny, confidence))
+                if confidence > confidence_threshold:
+                    # calculate
+                    f.write('{},{},{},{},{},{},{},{}\n'.format(
+                        idx, im_name, _cls+1, minx, miny, maxx-minx, maxy-miny, confidence))
 
         f.close()
