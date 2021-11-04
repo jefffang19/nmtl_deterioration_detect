@@ -56,6 +56,6 @@ for key in tqdm(name_box_id.keys()):
             _width = (x_max - x_min)/info[2]
             _height = (y_max - y_min)/info[3]
 
-            box_info = " %d %f %f %f %f\n" % (
+            box_info = "%d %f %f %f %f\n" % (
                 int(info[1]), x_center, y_center, _width, _height)
             f.write(box_info)

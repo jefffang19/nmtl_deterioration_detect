@@ -19,9 +19,9 @@ for whole in tqdm(whole_images):
     shift = 208
     will be divided into = 18*24 = 432 patches (per img)
     '''
-    patch_size = 416
-    shift_size = 208
-    tiling_shape = [17, 23]
+    patch_size = 2048
+    shift_size = 1024
+    tiling_shape = [2, 3]
 
     # save mask and image into patches
     for y in range(tiling_shape[0]):

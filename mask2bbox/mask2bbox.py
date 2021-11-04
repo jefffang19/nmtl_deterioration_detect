@@ -11,10 +11,10 @@ import numpy as np
 from tqdm import tqdm
 
 # define images path
-mask_path = 'predictions_test_yolov5/'
+mask_path = 'yolov5s_clean_new_predictions/'
 images_name = 'test_list.txt'
 
-confidence_threshold = 0.5
+confidence_threshold = 0
 
 if __name__ == '__main__':
 

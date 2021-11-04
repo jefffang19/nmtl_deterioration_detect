@@ -40,10 +40,10 @@ for _patch in tqdm(patches):
             # yolo label
             # <object-class> <x_center> <y_center> <width> <height>
             # https://github.com/AlexeyAB/darknet#how-to-train-to-detect-your-custom-objects
-            x_center = round((minx+(maxx-minx)/2)/416, 6)
-            y_center = round((miny+(maxy-miny)/2)/416, 6)
-            width = round((maxx-minx)/416, 6)
-            height = round((maxy-miny)/416, 6)
+            x_center = round((minx+(maxx-minx)/2)/2048, 6)
+            y_center = round((miny+(maxy-miny)/2)/2048, 6)
+            width = round((maxx-minx)/2048, 6)
+            height = round((maxy-miny)/2048, 6)
 
             yolo_labels.append("{} {} {} {} {}\n".format(
                 c, x_center, y_center, width, height))

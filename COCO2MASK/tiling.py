@@ -6,7 +6,7 @@ from cv2 import cv2
 whole_masks_path = 'mask_label'
 tiling_msk_path = 'mask_patches'
 tiling_img_path = 'img_patches'
-image_path = '../train'
+image_path = '../train2'
 
 whole_masks = os.listdir(whole_masks_path)
 
@@ -24,9 +24,9 @@ for whole in tqdm(whole_masks):
     shift = 208
     will be divided into = 18*24 = 432 patches (per img)
     '''
-    patch_size = 416
-    shift_size = 208
-    tiling_shape = [17, 23]
+    patch_size = 2048
+    shift_size = 1024
+    tiling_shape = [2, 3]
 
     # save mask and image into patches
     for y in range(tiling_shape[0]):

@@ -12,7 +12,7 @@ import os
 import cv2
 
 """hyper parameters"""
-json_file_path = 'train_coco.json'
+json_file_path = 'train_20210928.json'
 output_path = 'mask_label/'
 
 """load json file"""

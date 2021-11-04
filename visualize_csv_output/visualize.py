@@ -26,10 +26,10 @@ if __name__ == '__main__':
 
     # let user choose which image to visualize
     print('input image name you wish to visualize')
-    image_name = str(input()).split('.')[0]
+    image_name = str(input())
 
     # load image with cv2
-    image = cv2.imread(os.path.join(images_path, image_name + '.jpg'))
+    image = cv2.imread(os.path.join(images_path, image_name))
     # change to rgb for matplotlib
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
